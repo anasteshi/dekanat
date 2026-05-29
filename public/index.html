@@ -1,0 +1,637 @@
+<!doctype html>
+<html lang="uk">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>ІС Деканат</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link
+            href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@300;400;600;700&display=swap"
+            rel="stylesheet" />
+        <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+        <link rel="stylesheet" href="./style.css" />
+        <script type="module" src="./app.js"></script>
+    </head>
+    <body>
+        <!-- LOGIN SCREEN -->
+        <div id="login-screen">
+            <div class="login-box" id="login-box">
+                <div class="login-logo">
+                    <div class="uni">НТУ «Дніпровська політехніка»</div>
+                    <h1>ІС Деканат</h1>
+                </div>
+
+                <div class="login-group">
+                    <label>Логін</label>
+                    <input
+                        id="login-username"
+                        type="text"
+                        placeholder="admin"
+                        autocomplete="username" />
+                </div>
+                <div class="login-group">
+                    <label>Пароль</label>
+                    <input
+                        id="login-password"
+                        type="password"
+                        autocomplete="current-password" />
+                </div>
+                <button class="btn-login" id="btn-login">Увійти</button>
+                <div class="login-error" id="login-error"></div>
+
+                <p
+                    style="
+                        text-align: center;
+                        margin-top: 12px;
+                        font-size: 14px;
+                    ">
+                    <a
+                        href="#"
+                        id="link-to-register"
+                        style="color: var(--accent); font-weight: bold">
+                        Зареєструватися
+                    </a>
+                </p>
+
+                <div class="login-demo">
+                    <p>Тестові акаунти</p>
+                    <span class="demo-btn" id="admin">admin</span>
+                    <span class="demo-btn" id="methodist">methodist</span>
+                    <span class="demo-btn" id="teacher">teacher</span>
+                </div>
+            </div>
+
+            <div class="login-box" id="register-box" style="display: none">
+                <div class="login-logo">
+                    <div class="uni">НТУ «Дніпровська політехніка»</div>
+                    <h1>Реєстрація</h1>
+                    <p>Створіть новий акаунт</p>
+                </div>
+
+                <div class="login-group">
+                    <label>Логін</label>
+                    <input
+                        id="reg-username"
+                        type="text"
+                        placeholder="new_user" />
+                </div>
+                <div class="login-group">
+                    <label>Пароль</label>
+                    <input id="reg-password" type="password" />
+                </div>
+                <div class="login-group">
+                    <label>Роль</label>
+                    <select
+                        id="reg-role"
+                        style="
+                            width: 100%;
+                            padding: 8px;
+                            border-radius: 4px;
+                            border: 1px solid var(--border);
+                        ">
+                        <option value="teacher">Викладач (Teacher)</option>
+                        <option value="methodist">Методист (Methodist)</option>
+                        <option value="admin">Адміністратор (Admin)</option>
+                    </select>
+                </div>
+                <button
+                    class="btn-login"
+                    id="btn-register"
+                    style="background-color: var(--ok)">
+                    Зареєструватися
+                </button>
+                <div class="login-error" id="reg-error"></div>
+
+                <p
+                    style="
+                        text-align: center;
+                        margin-top: 12px;
+                        font-size: 14px;
+                    ">
+                    Вже є акаунт?
+                    <a
+                        href="#"
+                        id="link-to-login"
+                        style="color: var(--accent); font-weight: bold">
+                        Увійти
+                    </a>
+                </p>
+            </div>
+        </div>
+
+        <!-- APP -->
+        <div id="app">
+            <!-- SIDEBAR -->
+            <aside class="sidebar">
+                <div class="sidebar-logo">
+                    <span>НТУ «ДП»</span>
+                    <h1>ІС Деканат</h1>
+                </div>
+                <nav>
+                    <div class="nav-item active" data-view="dashboard">
+                        Дашборд
+                    </div>
+                    <div class="nav-item" data-view="students">Студенти</div>
+                    <div class="nav-item" data-view="curriculum">
+                        Навч. плани
+                    </div>
+                    <div class="nav-item" data-view="analytics">Аналітика</div>
+                    <div class="nav-item" data-view="reports">Звіти</div>
+                </nav>
+                <div class="sidebar-user">
+                    <div class="user-avatar" id="user-avatar">?</div>
+                    <div class="user-info">
+                        <div class="user-name" id="user-name">—</div>
+                        <div class="user-role" id="user-role-label">—</div>
+                    </div>
+                    <button class="btn-logout" id="btn-logout" title="Вихід">
+                        ⎋
+                    </button>
+                </div>
+            </aside>
+
+            <!-- MAIN -->
+            <div class="main">
+                <header class="topbar">
+                    <h2 id="page-title">Дашборд</h2>
+                    <div class="topbar-right">
+                        <span class="badge" id="api-status">
+                            ⬤ Підключення…
+                        </span>
+                        <span class="role-badge" id="role-badge"></span>
+                    </div>
+                </header>
+
+                <div class="content">
+                    <!-- DASHBOARD -->
+                    <section class="view active" id="view-dashboard">
+                        <div class="stats-grid">
+                            <div class="stat-card accent">
+                                <div class="label">Студентів</div>
+                                <div class="value" id="stat-students">—</div>
+                                <div class="sub">активних у системі</div>
+                            </div>
+                            <div class="stat-card blue">
+                                <div class="label">Спеціальностей</div>
+                                <div class="value" id="stat-specs">—</div>
+                                <div class="sub">на факультеті</div>
+                            </div>
+                            <div class="stat-card ok">
+                                <div class="label">Середній бал</div>
+                                <div class="value" id="stat-avg">—</div>
+                                <div class="sub">по всіх дисциплінах</div>
+                            </div>
+                            <div class="stat-card danger">
+                                <div class="label">Заборгованості</div>
+                                <div class="value" id="stat-debts">—</div>
+                                <div class="sub">незакритих записів</div>
+                            </div>
+                        </div>
+
+                        <div class="chart-grid">
+                            <div class="chart-card">
+                                <h3>Розподіл годин за спеціальностями</h3>
+                                <canvas id="chart-hours"></canvas>
+                            </div>
+                            <div class="chart-card">
+                                <h3>Розподіл оцінок (ЄКТС)</h3>
+                                <canvas id="chart-grades"></canvas>
+                            </div>
+                        </div>
+
+                        <div class="section-header">
+                            <h3>Останні студенти</h3>
+                        </div>
+                        <div class="table-wrap">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>ПІБ</th>
+                                        <th>Залік. кн.</th>
+                                        <th>Група</th>
+                                        <th>Спеціальність</th>
+                                        <th>Статус</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="dash-students-tbody">
+                                    <tr>
+                                        <td
+                                            colspan="5"
+                                            style="
+                                                text-align: center;
+                                                color: var(--muted);
+                                            ">
+                                            Завантаження…
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </section>
+
+                    <!-- STUDENTS -->
+                    <section class="view" id="view-students">
+                        <div class="filter-bar">
+                            <div class="form-group">
+                                <label>Група</label>
+                                <input
+                                    id="filter-group"
+                                    placeholder="ІТ-22"
+                                    style="width: 120px" />
+                            </div>
+                            <div class="form-group">
+                                <label>Статус</label>
+                                <select id="filter-status" style="width: 150px">
+                                    <option value="">Всі</option>
+                                    <option value="активний">Активний</option>
+                                    <option value="відрахований">
+                                        Відрахований
+                                    </option>
+                                    <option value="академвідпустка">
+                                        Академвідпустка
+                                    </option>
+                                </select>
+                            </div>
+                            <button
+                                class="btn btn-secondary"
+                                data-action="load-students">
+                                Знайти
+                            </button>
+                            <button
+                                class="btn btn-primary"
+                                id="btn-add-student"
+                                onclick="openStudentModal()">
+                                ＋ Додати студента
+                            </button>
+                        </div>
+
+                        <div class="table-wrap">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Залік. кн.</th>
+                                        <th>ПІБ</th>
+                                        <th>Група</th>
+                                        <th>Курс</th>
+                                        <th>Спеціальність</th>
+                                        <th>Статус</th>
+                                        <th>Дії</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="students-tbody">
+                                    <tr>
+                                        <td
+                                            colspan="8"
+                                            style="
+                                                text-align: center;
+                                                color: var(--muted);
+                                            ">
+                                            Завантаження…
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </section>
+
+                    <!-- CURRICULUM -->
+                    <section class="view" id="view-curriculum">
+                        <div class="filter-bar">
+                            <div class="form-group">
+                                <label>ID Спеціальності</label>
+                                <input
+                                    id="filter-spec"
+                                    placeholder="1"
+                                    style="width: 120px"
+                                    type="number" />
+                            </div>
+                            <div class="form-group">
+                                <label>Семестр</label>
+                                <input
+                                    id="filter-sem"
+                                    placeholder="1-12"
+                                    style="width: 80px"
+                                    type="number"
+                                    min="1"
+                                    max="12" />
+                            </div>
+                            <button
+                                class="btn btn-secondary"
+                                data-action="load-curriculum">
+                                Знайти
+                            </button>
+                            <button
+                                class="btn btn-primary"
+                                id="btn-add-curriculum"
+                                data-action="open-modal-curriculum">
+                                ＋ Додати запис
+                            </button>
+                        </div>
+
+                        <div class="table-wrap">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Спеціальність</th>
+                                        <th>Дисципліна</th>
+                                        <th>Сем</th>
+                                        <th>Лек</th>
+                                        <th>Прак</th>
+                                        <th>Лаб</th>
+                                        <th>Всього</th>
+                                        <th>Контроль</th>
+                                        <th>Дії</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="curriculum-tbody">
+                                    <tr>
+                                        <td
+                                            colspan="10"
+                                            style="
+                                                text-align: center;
+                                                color: var(--muted);
+                                            ">
+                                            Завантаження…
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </section>
+
+                    <!-- ANALYTICS -->
+                    <section class="view" id="view-analytics">
+                        <div class="select-row">
+                            <div class="form-group">
+                                <label>Спеціальність</label>
+                                <select id="analytics-spec-select">
+                                    <option value="">оберіть</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Семестр</label>
+                                <select id="analytics-sem-select">
+                                    <option value="">Всі</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
+                                    <option value="6">6</option>
+                                </select>
+                            </div>
+                            <button
+                                class="btn btn-primary"
+                                data-action="load-analytics-detail">
+                                Показати
+                            </button>
+                        </div>
+
+                        <div class="analytics-grid">
+                            <div class="chart-card">
+                                <h3>Години за дисциплінами</h3>
+                                <canvas id="chart-detail"></canvas>
+                            </div>
+                            <div class="chart-card">
+                                <h3>Студентів на факультет</h3>
+                                <canvas id="chart-faculty"></canvas>
+                            </div>
+                        </div>
+
+                        <div class="section-header" style="margin-top: 8px">
+                            <h3>Навантаження кафедр</h3>
+                        </div>
+                        <div class="table-wrap">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Кафедра</th>
+                                        <th>Дисциплін</th>
+                                        <th>Лекцій</th>
+                                        <th>Практик</th>
+                                        <th>Лаборат.</th>
+                                        <th>Всього год.</th>
+                                        <th>Серед. год</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="dept-load-tbody">
+                                    <tr>
+                                        <td
+                                            colspan="7"
+                                            style="
+                                                text-align: center;
+                                                color: var(--muted);
+                                            ">
+                                            Завантаження…
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </section>
+
+                    <!-- REPORTS -->
+                    <section class="view" id="view-reports">
+                        <div class="report-card">
+                            <h3>Академічна картка студента</h3>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label>ID Студента</label>
+                                    <input
+                                        id="report-student-id"
+                                        placeholder="1"
+                                        type="text" />
+                                </div>
+                                <div class="form-group">
+                                    <label>Формат звіту</label>
+                                    <select id="report-format">
+                                        <option value="txt">Текст (TXT)</option>
+                                        <option value="csv">
+                                            Ексель (CSV)
+                                        </option>
+                                        <option value="pdf">PDF</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="report-btns">
+                                <button
+                                    class="btn btn-primary"
+                                    data-action="preview-report">
+                                    Переглянути
+                                </button>
+                                <button
+                                    class="btn btn-ok"
+                                    data-action="download-report">
+                                    ⬇ Завантажити
+                                </button>
+                            </div>
+                            <pre
+                                class="card-preview"
+                                id="card-preview"
+                                style="display: none"></pre>
+                        </div>
+
+                        <div style="margin-top: 24px">
+                            <div class="report-card">
+                                <h3>Заборгованості групи (CSV)</h3>
+                                <div class="form-grid">
+                                    <div class="form-group">
+                                        <label>Назва групи</label>
+                                        <input
+                                            id="debts-group"
+                                            placeholder="ІТ-22" />
+                                    </div>
+                                </div>
+                                <div class="report-btns">
+                                    <button
+                                        class="btn btn-accent"
+                                        data-action="download-debts">
+                                        ⬇ Завантажити CSV
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+
+            <!-- TOAST -->
+            <div id="toast"></div>
+        </div>
+
+        <!-- MODAL: Студент -->
+        <div class="modal-overlay" id="modal-student">
+            <div class="modal">
+                <button
+                    class="modal-close"
+                    onclick="closeModal('modal-student')">
+                    ✕
+                </button>
+                <h3 id="modal-student-title">Новий студент</h3>
+                <input type="hidden" id="edit-student-id" />
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Залік. книжка *</label>
+                        <input id="s-record" placeholder="ІТ-2201" />
+                    </div>
+                    <div class="form-group">
+                        <label>ПІБ *</label>
+                        <input
+                            id="s-fullname"
+                            placeholder="Іваненко Олексій Петрович" />
+                    </div>
+                    <div class="form-group">
+                        <label>Спеціальність ID *</label>
+                        <input id="s-spec" placeholder="1" type="number" />
+                    </div>
+                    <div class="form-group">
+                        <label>Група *</label>
+                        <input id="s-group" placeholder="ІТ-22" />
+                    </div>
+                    <div class="form-group">
+                        <label>Курс *</label>
+                        <input
+                            id="s-year"
+                            placeholder="1-6"
+                            type="number"
+                            min="1"
+                            max="6" />
+                    </div>
+                    <div class="form-group">
+                        <label>Стать</label>
+                        <select id="s-gender">
+                            <option value="">—</option>
+                            <option value="М">Чоловіча (М)</option>
+                            <option value="Ж">Жіноча (Ж)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Дата народження</label>
+                        <input id="s-birth" type="date" />
+                    </div>
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input
+                            id="s-email"
+                            type="email"
+                            placeholder="student@nmu.ua" />
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button class="btn btn-primary" data-action="save-student">
+                        Зберегти
+                    </button>
+                    <button
+                        class="btn btn-secondary"
+                        onclick="closeModal('modal-student')">
+                        Скасувати
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- MODAL: Curriculum -->
+        <div class="modal-overlay" id="modal-curriculum">
+            <div class="modal">
+                <button class="modal-close" data-action="delete-curriculum">
+                    ✕
+                </button>
+                <h3>Додати навчальний план</h3>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Спеціальність ID *</label>
+                        <input id="c-spec" type="number" placeholder="1" />
+                    </div>
+                    <div class="form-group">
+                        <label>Дисципліна ID *</label>
+                        <input id="c-subject" type="number" placeholder="1" />
+                    </div>
+                    <div class="form-group">
+                        <label>Семестр *</label>
+                        <input
+                            id="c-semester"
+                            type="number"
+                            min="1"
+                            max="12"
+                            placeholder="1" />
+                    </div>
+                    <div class="form-group">
+                        <label>Форма контролю</label>
+                        <select id="c-control">
+                            <option>залік</option>
+                            <option>іспит</option>
+                            <option>диф. залік</option>
+                            <option>курсова робота</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Лекції (год)</label>
+                        <input id="c-lec" type="number" min="0" value="30" />
+                    </div>
+                    <div class="form-group">
+                        <label>Практики (год)</label>
+                        <input id="c-prac" type="number" min="0" value="15" />
+                    </div>
+                    <div class="form-group full">
+                        <label>Лабораторні (год)</label>
+                        <input id="c-lab" type="number" min="0" value="15" />
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button
+                        class="btn btn-primary"
+                        data-action="save-curriculum">
+                        Зберегти
+                    </button>
+                    <button
+                        class="btn btn-secondary"
+                        data-action="close-modal-curriculum">
+                        Скасувати
+                    </button>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
