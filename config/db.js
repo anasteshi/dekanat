@@ -6,6 +6,7 @@ const pool = new Pool({
     database: process.env.DB_NAME,
     user: process.env.DB_USER,
     password: process.env.DB_PASSWORD,
+    ssl: { rejectUnauthorized: false },
 })
 
 const connectDB = async () => {
@@ -13,8 +14,8 @@ const connectDB = async () => {
         await pool.connect()
         console.log("Connected to DB")
     } catch (error) {
-        console.log("An error occurred connecting to DB")
+        console.error("An error occurred connecting to DB:", error.message)
     }
 }
 
-module.exports = {connectDB, pool}
+module.exports = { connectDB, pool }
