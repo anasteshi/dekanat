@@ -31,7 +31,6 @@ body {
     min-height: 100vh;
 }
 
-/* ── LOGIN SCREEN ─────────────────────────────────────────────── */
 #login-screen {
     display: flex;
     align-items: center;
@@ -178,7 +177,6 @@ body {
     color: var(--blue);
 }
 
-/* ── APP LAYOUT ───────────────────────────────────────────────── */
 #app {
     display: none;
     min-height: 100vh;
@@ -367,7 +365,7 @@ nav {
     display: block;
 }
 
-/* ── STAT CARDS ─────────────────────────────────── */
+/* STAT CARDS */
 .stats-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -421,7 +419,7 @@ nav {
     border-top: 3px solid var(--danger);
 }
 
-/* ── CHARTS ─────────────────────────────────────── */
+/* CHARTS */
 .chart-grid {
     display: grid;
     grid-template-columns: 2fr 1fr;
@@ -450,7 +448,7 @@ nav {
     max-height: 260px;
 }
 
-/* ── TABLE ──────────────────────────────────────── */
+/* TABLE */
 .section-header {
     display: flex;
     align-items: center;
@@ -509,7 +507,7 @@ tbody td {
     vertical-align: middle;
 }
 
-/* ── BUTTONS ─────────────────────────────────────── */
+/* BUTTONS */
 .btn {
     display: inline-flex;
     align-items: center;
@@ -568,7 +566,7 @@ tbody td {
     color: var(--navy);
 }
 
-/* ── FORM ────────────────────────────────────────── */
+/* FORM */
 .form-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -636,7 +634,7 @@ select:focus {
     min-width: 140px;
 }
 
-/* ── CHIPS ───────────────────────────────────────── */
+/* CHIPS */
 .chip {
     display: inline-block;
     padding: 2px 8px;
@@ -666,7 +664,7 @@ select:focus {
     color: var(--muted);
 }
 
-/* ── MODAL ───────────────────────────────────────── */
+/* MODAL */
 .modal-overlay {
     display: none;
     position: fixed;
@@ -710,7 +708,7 @@ select:focus {
     line-height: 1;
 }
 
-/* ── TOAST ───────────────────────────────────────── */
+/* TOAST */
 #toast {
     position: fixed;
     bottom: 24px;
@@ -734,7 +732,7 @@ select:focus {
     opacity: 1;
 }
 
-/* ── REPORTS ─────────────────────────────────────── */
+/* REPORTS */
 .report-card {
     background: var(--card);
     border: 1px solid var(--border);
@@ -789,7 +787,7 @@ pre.card-preview {
     flex: 1;
 }
 
-/* ── ROLE BADGE ─────────────────────────────────── */
+/* ROLE BADGE */
 .role-badge {
     display: inline-block;
     padding: 2px 8px;
@@ -820,7 +818,7 @@ pre.card-preview {
     color: #856404;
 }
 
-/* ── ACCESS DENIED ─────────────────────────────── */
+/* ACCESS DENIED */
 .access-denied {
     text-align: center;
     padding: 60px 20px;
